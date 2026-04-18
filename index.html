@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Laundry Kilat - Bersih, Cepat, Antar Jemput</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { poppins: ['Poppins', 'sans-serif'] },
+          colors: {
+            brand: { DEFAULT: '#3b82f6', dark: '#1d4ed8', light: '#93c5fd', lighter: '#eff6ff' },
+            accent: { DEFAULT: '#fbbf24', dark: '#d97706', light: '#fde68a' },
+          },
+          animation: {
+            'fade-up': 'fadeUp 0.6s ease-out forwards',
+            'fade-in': 'fadeIn 0.5s ease-out forwards',
+            'pulse-slow': 'pulse 3s ease-in-out infinite',
+          },
+          keyframes: {
+            fadeUp: { '0%': { opacity: '0', transform: 'translateY(30px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+            fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    * { font-family: 'Poppins', sans-serif; }
+    html { scroll-behavior: smooth; }
+    .observe-fade { opacity: 0; transform: translateY(28px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .observe-fade.visible { opacity: 1; transform: translateY(0); }
+    .observe-fade-delay-1 { transition-delay: 0.1s; }
+    .observe-fade-delay-2 { transition-delay: 0.2s; }
+    .observe-fade-delay-3 { transition-delay: 0.3s; }
+    .observe-fade-delay-4 { transition-delay: 0.4s; }
+    @media (prefers-reduced-motion: reduce) {
+      .observe-fade { opacity: 1; transform: none; transition: none; }
+    }
+    .hero-gradient { background: linear-gradient(135deg, #1d4ed8 0%, #3b82f6 50%, #60a5fa 100%); }
+    .card-hover { transition: transform 0.25s ease, box-shadow 0.25s ease; }
+    .card-hover:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(59,130,246,0.15); }
+    .btn-wa { transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease; }
+    .btn-wa:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(34,197,94,0.35); }
+    .btn-wa:active { transform: translateY(0); }
+    .step-line::after { content: ''; position: absolute; top: 22px; left: 50%; width: 100%; height: 2px; background: linear-gradient(90deg, #3b82f6, #93c5fd); z-index: 0; }
+    .step-last::after { display: none; }
+    #hamburger-menu { cursor: pointer; }
+    .nav-link { position: relative; }
+    .nav-link::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 2px; background: #fbbf24; transition: width 0.25s ease; }
+    .nav-link:hover::after { width: 100%; }
+  </style>
+</head>
+<body class="bg-white text-slate-800 antialiased">
+
+<!-- ============================================================ NAVBAR ============================================================ -->
+<nav id="navbar" class="fixed top-0 inset-x-0 z-50 bg-white/95 backdrop-blur-sm border-b border-slate-100 transition-shadow duration-300">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16">
+
+      <!-- Logo -->
+      <a href="#home" class="flex items-center gap-2 group cursor-pointer" aria-label="Laundry Kilat - Beranda">
+        <div class="w-9 h-9 bg-brand rounded-xl flex items-center justify-center shadow-md group-hover:bg-brand-dark transition-colors duration-200">
+          <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M3 6h18M3 12h18M3 18h18"/>
+            <rect x="7" y="3" width="10" height="18" rx="2"/>
+          </svg>
+        </div>
+        <span class="text-xl font-800 font-bold text-slate-900">Laundry<span class="text-brand"> Kilat</span></span>
+      </a>
+
+      <!-- Desktop Menu -->
+      <ul class="hidden md:flex items-center gap-7" role="list">
+        <li><a href="#home" class="nav-link text-sm font-medium text-slate-700 hover:text-brand transition-colors duration-200">Home</a></li>
+        <li><a href="#layanan" class="nav-link text-sm font-medium text-slate-700 hover:text-brand transition-colors duration-200">Layanan</a></li>
+        <li><a href="#harga" class="nav-link text-sm font-medium text-slate-700 hover:text-brand transition-colors duration-200">Harga</a></li>
+        <li><a href="#cara-order" class="nav-link text-sm font-medium text-slate-700 hover:text-brand transition-colors duration-200">Cara Order</a></li>
+        <li><a href="#kontak" class="nav-link text-sm font-medium text-slate-700 hover:text-brand transition-colors duration-200">Kontak</a></li>
+        <li>
+          <a href="https://wa.me/6281234567890" target="_blank" rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 bg-brand text-white text-sm font-semibold px-4 py-2 rounded-lg hover:bg-brand-dark transition-colors duration-200 cursor-pointer"
+            aria-label="Pesan sekarang via WhatsApp">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+              <path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.553 4.116 1.52 5.847L.057 23.895a.75.75 0 00.918.919l6.101-1.457A11.944 11.944 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75a9.706 9.706 0 01-4.95-1.354l-.355-.211-3.682.88.896-3.63-.231-.374A9.71 9.71 0 012.25 12C2.25 6.615 6.615 2.25 12 2.25S21.75 6.615 21.75 12 17.385 21.75 12 21.75z"/>
+            </svg>
+            Pesan Sekarang
+          </a>
+        </li>
+      </ul>
+
+      <!-- Hamburger -->
+      <button id="hamburger-menu" class="md:hidden p-2 rounded-lg hover:bg-slate-100 transition-colors duration-200" aria-label="Buka menu navigasi" aria-expanded="false" aria-controls="mobile-menu">
+        <svg id="icon-open" class="w-6 h-6 text-slate-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+        <svg id="icon-close" class="w-6 h-6 text-slate-700 hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-slate-100 px-4 pb-4" role="navigation" aria-label="Menu mobile">
+    <ul class="flex flex-col gap-1 pt-3" role="list">
+      <li><a href="#home" class="mobile-nav-link block text-sm font-medium text-slate-700 hover:text-brand hover:bg-brand-lighter px-3 py-2.5 rounded-lg transition-colors duration-200">Home</a></li>
+      <li><a href="#layanan" class="mobile-nav-link block text-sm font-medium text-slate-700 hover:text-brand hover:bg-brand-lighter px-3 py-2.5 rounded-lg transition-colors duration-200">Layanan</a></li>
+      <li><a href="#harga" class="mobile-nav-link block text-sm font-medium text-slate-700 hover:text-brand hover:bg-brand-lighter px-3 py-2.5 rounded-lg transition-colors duration-200">Harga</a></li>
+      <li><a href="#cara-order" class="mobile-nav-link block text-sm font-medium text-slate-700 hover:text-brand hover:bg-brand-lighter px-3 py-2.5 rounded-lg transition-colors duration-200">Cara Order</a></li>
+      <li><a href="#kontak" class="mobile-nav-link block text-sm font-medium text-slate-700 hover:text-brand hover:bg-brand-lighter px-3 py-2.5 rounded-lg transition-colors duration-200">Kontak</a></li>
+      <li class="pt-2">
+        <a href="https://wa.me/6281234567890" target="_blank" rel="noopener noreferrer"
+          class="flex items-center justify-center gap-2 bg-brand text-white text-sm font-semibold px-4 py-3 rounded-xl cursor-pointer">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+            <path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.553 4.116 1.52 5.847L.057 23.895a.75.75 0 00.918.919l6.101-1.457A11.944 11.944 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75a9.706 9.706 0 01-4.95-1.354l-.355-.211-3.682.88.896-3.63-.231-.374A9.71 9.71 0 012.25 12C2.25 6.615 6.615 2.25 12 2.25S21.75 6.615 21.75 12 17.385 21.75 12 21.75z"/>
+          </svg>
+          Pesan via WhatsApp
+        </a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ============================================================ HERO ============================================================ -->
+<section id="home" class="hero-gradient pt-16 min-h-screen flex items-center relative overflow-hidden" aria-labelledby="hero-heading">
+  <!-- Background decorations -->
+  <div class="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
+    <div class="absolute -top-20 -right-20 w-80 h-80 bg-white/5 rounded-full"></div>
+    <div class="absolute top-1/2 -left-16 w-56 h-56 bg-white/5 rounded-full"></div>
+    <div class="absolute bottom-10 right-1/4 w-40 h-40 bg-accent/10 rounded-full"></div>
+    <div class="absolute top-1/4 right-1/3 w-2 h-2 bg-white/40 rounded-full"></div>
+    <div class="absolute top-1/3 left-1/4 w-3 h-3 bg-accent/40 rounded-full"></div>
+    <div class="absolute bottom-1/3 right-1/5 w-2 h-2 bg-white/30 rounded-full"></div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center relative z-10">
+    <div class="inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm border border-white/25 text-white text-sm font-medium px-4 py-2 rounded-full mb-8">
+      <span class="w-2 h-2 bg-accent rounded-full animate-pulse-slow inline-block"></span>
+      Buka 7 Hari Seminggu
+    </div>
+
+    <h1 id="hero-heading" class="text-4xl sm:text-5xl md:text-6xl font-bold text-white leading-tight mb-6 max-w-4xl mx-auto">
+      Laundry Bersih, Cepat,
+      <span class="text-accent block sm:inline"> Antar Jemput!</span>
+    </h1>
+
+    <p class="text-blue-100 text-lg sm:text-xl max-w-2xl mx-auto mb-10 leading-relaxed">
+      Selesai dalam 24 jam, dijemput dari rumah kamu. Bersih sempurna, wangi tahan lama, langsung diantar balik.
+    </p>
+
+    <div class="flex flex-col sm:flex-row gap-4 justify-center mb-14">
+      <a href="https://wa.me/6281234567890?text=Halo%20Laundry%20Kilat%2C%20saya%20mau%20pesan%20laundry"
+        target="_blank" rel="noopener noreferrer"
+        class="btn-wa inline-flex items-center justify-center gap-2.5 bg-green-500 hover:bg-green-600 text-white font-semibold text-base px-8 py-4 rounded-xl cursor-pointer shadow-lg"
+        aria-label="Pesan Sekarang via WhatsApp">
+        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+          <path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.553 4.116 1.52 5.847L.057 23.895a.75.75 0 00.918.919l6.101-1.457A11.944 11.944 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75a9.706 9.706 0 01-4.95-1.354l-.355-.211-3.682.88.896-3.63-.231-.374A9.71 9.71 0 012.25 12C2.25 6.615 6.615 2.25 12 2.25S21.75 6.615 21.75 12 17.385 21.75 12 21.75z"/>
+        </svg>
+        Pesan Sekarang
+      </a>
+      <a href="#layanan"
+        class="inline-flex items-center justify-center gap-2 bg-white/15 hover:bg-white/25 border border-white/30 text-white font-semibold text-base px-8 py-4 rounded-xl transition-colors duration-200 cursor-pointer"
+        aria-label="Lihat layanan kami">
+        Lihat Layanan
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+        </svg>
+      </a>
+    </div>
+
+    <!-- Badges -->
+    <div class="flex flex-wrap justify-center gap-3 sm:gap-4">
+      <div class="flex items-center gap-2 bg-white/15 backdrop-blur-sm border border-white/20 text-white text-sm font-medium px-4 py-2.5 rounded-xl">
+        <svg class="w-4 h-4 text-accent flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+        </svg>
+        Buka 7 Hari
+      </div>
+      <div class="flex items-center gap-2 bg-white/15 backdrop-blur-sm border border-white/20 text-white text-sm font-medium px-4 py-2.5 rounded-xl">
+        <svg class="w-4 h-4 text-accent flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+        </svg>
+        Antar Jemput Gratis
+      </div>
+      <div class="flex items-center gap-2 bg-white/15 backdrop-blur-sm border border-white/20 text-white text-sm font-medium px-4 py-2.5 rounded-xl">
+        <svg class="w-4 h-4 text-accent flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        24 Jam Selesai
+      </div>
+    </div>
+  </div>
+
+  <!-- Wave separator -->
+  <div class="absolute bottom-0 inset-x-0" aria-hidden="true">
+    <svg viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full" preserveAspectRatio="none">
+      <path d="M0 60L1440 60L1440 20C1200 55 960 5 720 30C480 55 240 5 0 20L0 60Z" fill="white"/>
+    </svg>
+  </div>
+</section>
+
+<!-- ============================================================ LAYANAN ============================================================ -->
+<section id="layanan" class="py-20 bg-white" aria-labelledby="layanan-heading">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-14 observe-fade">
+      <span class="inline-block text-brand text-sm font-semibold uppercase tracking-widest mb-3">Layanan Kami</span>
+      <h2 id="layanan-heading" class="text-3xl sm:text-4xl font-bold text-slate-900 mb-4">Solusi Laundry Lengkap</h2>
+      <p class="text-slate-500 max-w-xl mx-auto text-base leading-relaxed">Kami menyediakan berbagai pilihan layanan laundry yang dapat disesuaikan dengan kebutuhan kamu.</p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <!-- Cuci Kering -->
+      <article class="card-hover bg-white border border-slate-100 rounded-2xl p-7 shadow-sm observe-fade observe-fade-delay-1 cursor-default" aria-label="Layanan Cuci Kering">
+        <div class="w-14 h-14 bg-brand-lighter rounded-2xl flex items-center justify-center mb-5">
+          <svg class="w-7 h-7 text-brand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M3 6h18M3 12h18M3 18h7"/>
+            <circle cx="17" cy="18" r="3"/>
+            <path d="M17 15v1.5"/>
+          </svg>
+        </div>
+        <h3 class="text-lg font-semibold text-slate-900 mb-2">Cuci Kering</h3>
+        <p class="text-slate-500 text-sm leading-relaxed">Pakaian dicuci bersih dan dikeringkan sempurna, siap untuk disimpan atau digunakan kembali.</p>
+        <div class="mt-5 pt-4 border-t border-slate-100">
+          <span class="text-brand font-bold text-base">Rp 5.000</span>
+          <span class="text-slate-400 text-sm">/kg</span>
+        </div>
+      </article>
+
+      <!-- Cuci Setrika -->
+      <article class="card-hover bg-white border border-slate-100 rounded-2xl p-7 shadow-sm observe-fade observe-fade-delay-2 cursor-default" aria-label="Layanan Cuci Setrika">
+        <div class="w-14 h-14 bg-accent/10 rounded-2xl flex items-center justify-center mb-5">
+          <svg class="w-7 h-7 text-accent-dark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M3 17h18l-2-9H5L3 17z"/>
+            <path d="M5 17v2a1 1 0 001 1h12a1 1 0 001-1v-2"/>
+            <path d="M7 11l1-4h8l1 4"/>
+          </svg>
+        </div>
+        <h3 class="text-lg font-semibold text-slate-900 mb-2">Cuci Setrika</h3>
+        <p class="text-slate-500 text-sm leading-relaxed">Dicuci, dikeringkan, lalu disetrika rapi. Pakaian kamu siap pakai langsung dari rak.</p>
+        <div class="mt-5 pt-4 border-t border-slate-100">
+          <span class="text-brand font-bold text-base">Rp 8.000</span>
+          <span class="text-slate-400 text-sm">/kg</span>
+        </div>
+      </article>
+
+      <!-- Cuci Sepatu -->
+      <article class="card-hover bg-white border border-slate-100 rounded-2xl p-7 shadow-sm observe-fade observe-fade-delay-3 cursor-default" aria-label="Layanan Cuci Sepatu">
+        <div class="w-14 h-14 bg-green-50 rounded-2xl flex items-center justify-center mb-5">
+          <svg class="w-7 h-7 text-green-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M2 18l4-8 3 5 3-3 5 3 3-4"/>
+            <path d="M2 18h20v2a1 1 0 01-1 1H3a1 1 0 01-1-1v-2z"/>
+          </svg>
+        </div>
+        <h3 class="text-lg font-semibold text-slate-900 mb-2">Cuci Sepatu</h3>
+        <p class="text-slate-500 text-sm leading-relaxed">Perawatan khusus untuk semua jenis sepatu agar bersih dan kinclong seperti baru.</p>
+        <div class="mt-5 pt-4 border-t border-slate-100">
+          <span class="text-brand font-bold text-base">Rp 25.000</span>
+          <span class="text-slate-400 text-sm">/pasang</span>
+        </div>
+      </article>
+
+      <!-- Laundry Kilogram -->
+      <article class="card-hover bg-white border border-slate-100 rounded-2xl p-7 shadow-sm observe-fade observe-fade-delay-4 cursor-default" aria-label="Layanan Laundry Kilogram">
+        <div class="w-14 h-14 bg-purple-50 rounded-2xl flex items-center justify-center mb-5">
+          <svg class="w-7 h-7 text-purple-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="9"/>
+            <path d="M12 3v2M12 19v2M3 12h2M19 12h2"/>
+            <path d="M12 8v4l2.5 2.5"/>
+          </svg>
+        </div>
+        <h3 class="text-lg font-semibold text-slate-900 mb-2">Laundry Kilogram</h3>
+        <p class="text-slate-500 text-sm leading-relaxed">Harga per kilogram, cocok untuk volume banyak. Hemat dan praktis untuk keluarga.</p>
+        <div class="mt-5 pt-4 border-t border-slate-100">
+          <span class="text-brand font-bold text-base">Rp 6.000</span>
+          <span class="text-slate-400 text-sm">/kg</span>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ KALKULATOR HARGA ============================================================ -->
+<section id="harga" class="py-20 bg-slate-50" aria-labelledby="harga-heading">
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-12 observe-fade">
+      <span class="inline-block text-brand text-sm font-semibold uppercase tracking-widest mb-3">Estimasi Biaya</span>
+      <h2 id="harga-heading" class="text-3xl sm:text-4xl font-bold text-slate-900 mb-4">Kalkulator Harga Otomatis</h2>
+      <p class="text-slate-500 text-base leading-relaxed">Hitung estimasi biaya laundry kamu sebelum memesan.</p>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-8 observe-fade">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
+        <!-- Pilih Layanan -->
+        <div>
+          <label for="service-type" class="block text-sm font-semibold text-slate-700 mb-2">Jenis Layanan</label>
+          <div class="relative">
+            <select id="service-type"
+              class="w-full appearance-none bg-slate-50 border border-slate-200 text-slate-700 text-sm rounded-xl px-4 py-3.5 pr-10 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-all duration-200 cursor-pointer"
+              aria-label="Pilih jenis layanan laundry">
+              <option value="" disabled selected>-- Pilih Layanan --</option>
+              <option value="cuci-kering">Cuci Kering (Rp 5.000/kg)</option>
+              <option value="cuci-setrika">Cuci Setrika (Rp 8.000/kg)</option>
+              <option value="cuci-sepatu">Cuci Sepatu (Rp 25.000/pasang)</option>
+              <option value="laundry-kg">Laundry Kilogram (Rp 6.000/kg)</option>
+            </select>
+            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3" aria-hidden="true">
+              <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Input Berat / Pasang -->
+        <div>
+          <label for="weight-input" id="weight-label" class="block text-sm font-semibold text-slate-700 mb-2">Berat / Jumlah</label>
+          <div class="relative">
+            <input type="number" id="weight-input" min="0" step="0.5"
+              class="w-full bg-slate-50 border border-slate-200 text-slate-700 text-sm rounded-xl px-4 py-3.5 pr-14 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition-all duration-200"
+              placeholder="Masukkan jumlah"
+              aria-labelledby="weight-label"
+              aria-describedby="weight-hint" />
+            <span id="weight-unit" class="absolute inset-y-0 right-0 flex items-center pr-4 text-slate-400 text-sm font-medium pointer-events-none" aria-live="polite">kg</span>
+          </div>
+          <p id="weight-hint" class="mt-1.5 text-xs text-slate-400">Minimum order 2 kg untuk layanan berbasis kilogram</p>
+        </div>
+      </div>
+
+      <!-- Tombol Hitung -->
+      <button id="calc-btn"
+        class="w-full bg-brand hover:bg-brand-dark text-white font-semibold text-base py-3.5 rounded-xl transition-colors duration-200 cursor-pointer flex items-center justify-center gap-2"
+        onclick="calculatePrice()"
+        aria-label="Hitung estimasi harga laundry">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 11h.01M12 11h.01M15 11h.01M4 19h16a2 2 0 002-2V7a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+        </svg>
+        Hitung Harga
+      </button>
+
+      <!-- Result -->
+      <div id="calc-result" class="hidden mt-6" role="region" aria-live="polite" aria-label="Hasil kalkulasi harga">
+        <div class="bg-brand-lighter border border-brand/20 rounded-xl p-5">
+          <div class="flex items-start justify-between gap-4">
+            <div>
+              <p class="text-sm text-brand font-medium mb-1" id="result-label">Estimasi Biaya Laundry</p>
+              <p id="result-service" class="text-slate-600 text-sm mb-3"></p>
+              <p id="result-price" class="text-3xl font-bold text-slate-900"></p>
+            </div>
+            <div class="w-12 h-12 bg-brand/10 rounded-xl flex items-center justify-center flex-shrink-0">
+              <svg class="w-6 h-6 text-brand" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+            </div>
+          </div>
+          <div class="mt-4 pt-4 border-t border-brand/15">
+            <a href="https://wa.me/6281234567890?text=Halo%2C%20saya%20mau%20pesan%20laundry" target="_blank" rel="noopener noreferrer"
+              class="btn-wa inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white text-sm font-semibold px-5 py-2.5 rounded-lg cursor-pointer">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+                <path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.553 4.116 1.52 5.847L.057 23.895a.75.75 0 00.918.919l6.101-1.457A11.944 11.944 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75a9.706 9.706 0 01-4.95-1.354l-.355-.211-3.682.88.896-3.63-.231-.374A9.71 9.71 0 012.25 12C2.25 6.615 6.615 2.25 12 2.25S21.75 6.615 21.75 12 17.385 21.75 12 21.75z"/>
+              </svg>
+              Pesan Sekarang
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Error -->
+      <div id="calc-error" class="hidden mt-4" role="alert">
+        <div class="bg-red-50 border border-red-200 rounded-xl p-4 flex items-center gap-3">
+          <svg class="w-5 h-5 text-red-500 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+          </svg>
+          <p id="error-message" class="text-red-600 text-sm font-medium"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ CARA ORDER ============================================================ -->
+<section id="cara-order" class="py-20 bg-white" aria-labelledby="order-heading">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-14 observe-fade">
+      <span class="inline-block text-brand text-sm font-semibold uppercase tracking-widest mb-3">Cara Pesan</span>
+      <h2 id="order-heading" class="text-3xl sm:text-4xl font-bold text-slate-900 mb-4">Mudah dalam 4 Langkah</h2>
+      <p class="text-slate-500 max-w-lg mx-auto text-base leading-relaxed">Proses pesan yang simpel, cepat, dan tanpa ribet. Pakaian bersih langsung ke tangan kamu.</p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 relative">
+      <!-- Step 1 -->
+      <div class="observe-fade observe-fade-delay-1 text-center">
+        <div class="relative flex justify-center mb-6">
+          <div class="w-16 h-16 bg-brand rounded-2xl flex items-center justify-center shadow-lg shadow-brand/25 z-10 relative">
+            <svg class="w-7 h-7 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+            </svg>
+          </div>
+          <div class="absolute top-1/2 left-1/2 w-full h-0.5 bg-gradient-to-r from-brand/60 to-brand/20 hidden lg:block" style="transform: translateY(-50%); z-index: 0;" aria-hidden="true"></div>
+        </div>
+        <div class="inline-flex items-center justify-center w-6 h-6 bg-brand text-white text-xs font-bold rounded-full mb-3" aria-hidden="true">1</div>
+        <h3 class="text-base font-semibold text-slate-900 mb-2">Hubungi via WhatsApp</h3>
+        <p class="text-slate-500 text-sm leading-relaxed">Chat kami di WhatsApp, beritahu jenis layanan dan estimasi berat cucian kamu.</p>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="observe-fade observe-fade-delay-2 text-center">
+        <div class="relative flex justify-center mb-6">
+          <div class="w-16 h-16 bg-accent rounded-2xl flex items-center justify-center shadow-lg shadow-accent/25 z-10 relative">
+            <svg class="w-7 h-7 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+              <line x1="16" y1="2" x2="16" y2="6"/>
+              <line x1="8" y1="2" x2="8" y2="6"/>
+              <line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+          </div>
+        </div>
+        <div class="inline-flex items-center justify-center w-6 h-6 bg-accent text-white text-xs font-bold rounded-full mb-3" aria-hidden="true">2</div>
+        <h3 class="text-base font-semibold text-slate-900 mb-2">Jadwalkan Penjemputan</h3>
+        <p class="text-slate-500 text-sm leading-relaxed">Tentukan waktu dan lokasi penjemputan yang sesuai dengan jadwal kamu.</p>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="observe-fade observe-fade-delay-3 text-center">
+        <div class="relative flex justify-center mb-6">
+          <div class="w-16 h-16 bg-green-500 rounded-2xl flex items-center justify-center shadow-lg shadow-green-500/25 z-10 relative">
+            <svg class="w-7 h-7 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+          </div>
+        </div>
+        <div class="inline-flex items-center justify-center w-6 h-6 bg-green-500 text-white text-xs font-bold rounded-full mb-3" aria-hidden="true">3</div>
+        <h3 class="text-base font-semibold text-slate-900 mb-2">Pakaian Diproses</h3>
+        <p class="text-slate-500 text-sm leading-relaxed">Kami menjemput dan memproses cucian kamu secara profesional dalam 24 jam.</p>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="observe-fade observe-fade-delay-4 text-center">
+        <div class="relative flex justify-center mb-6">
+          <div class="w-16 h-16 bg-purple-500 rounded-2xl flex items-center justify-center shadow-lg shadow-purple-500/25 z-10 relative">
+            <svg class="w-7 h-7 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="1" y="3" width="15" height="13" rx="2"/>
+              <path d="M16 8h6l2 5v3h-8V8z"/>
+              <circle cx="5.5" cy="18.5" r="2.5"/>
+              <circle cx="18.5" cy="18.5" r="2.5"/>
+            </svg>
+          </div>
+        </div>
+        <div class="inline-flex items-center justify-center w-6 h-6 bg-purple-500 text-white text-xs font-bold rounded-full mb-3" aria-hidden="true">4</div>
+        <h3 class="text-base font-semibold text-slate-900 mb-2">Diantar Kembali</h3>
+        <p class="text-slate-500 text-sm leading-relaxed">Cucian bersih dan rapi diantar langsung ke depan pintu rumah kamu. Gratis ongkir!</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ TESTIMONI ============================================================ -->
+<section id="testimoni" class="py-20 bg-slate-50" aria-labelledby="testimoni-heading">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-14 observe-fade">
+      <span class="inline-block text-brand text-sm font-semibold uppercase tracking-widest mb-3">Testimoni</span>
+      <h2 id="testimoni-heading" class="text-3xl sm:text-4xl font-bold text-slate-900 mb-4">Kata Pelanggan Kami</h2>
+      <p class="text-slate-500 max-w-lg mx-auto text-base leading-relaxed">Kepuasan pelanggan adalah prioritas utama kami. Ini yang mereka katakan.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <!-- Testimoni 1 -->
+      <article class="card-hover bg-white rounded-2xl p-7 shadow-sm border border-slate-100 observe-fade observe-fade-delay-1">
+        <div class="flex items-center gap-1 mb-5" aria-label="Rating 5 bintang">
+          <svg class="w-4 h-4 text-accent" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          <svg class="w-4 h-4 text-accent" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          <svg class="w-4 h-4 text-accent" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          <svg class="w-4 h-4 text-accent" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          <svg class="w-4 h-4 text-accent" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+        </div>
+        <blockquote>
+          <p class="text-slate-600 text-sm leading-relaxed mb-6 italic">"Laundry Kilat beneran kilat! Dijemput pagi, sorenya udah diantar lagi. Bajunya bersih banget dan wangi. Recommended banget buat yang sibuk!"</p>
+        </blockquote>
+        <div class="flex items-center gap-3">
+          <img src="https://ui-avatars.com/api/?name=Sari+Dewi&background=3b82f6&color=fff&size=40&bold=true&rounded=true"
+            alt="Foto profil Sari Dewi"
+            width="40" height="40"
+            class="w-10 h-10 rounded-full object-cover"
+            loading="lazy" />
+          <div>
+            <p class="text-sm font-semibold text-slate-900">Sari Dewi</p>
+            <p class="text-xs text-slate-400">Jakarta Selatan</p>
+          </div>
+        </div>
+      </article>
+
+      <!-- Testimoni 2 -->
+      <article class="card-hover bg-white rounded-2xl p-7 shadow-sm border border-slate-100 observe-fade observe-fade-delay-2">
+        <div class="flex items-center gap-1 mb-5" aria-label="Rating 5 bintang">
+          <svg class="w-4 h-4 text-accent" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          <svg class="w-4 h-4 text-accent" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          <svg class="w-4 h-4 text-accent" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          <svg class="w-4 h-4 text-accent" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          <svg class="w-4 h-4 text-accent" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+        </div>
+        <blockquote>
+          <p class="text-slate-600 text-sm leading-relaxed mb-6 italic">"Cuci sepatu di sini hasilnya luar biasa. Sepatu lama saya jadi kelihatan seperti baru. Harga juga terjangkau dan pelayanannya ramah."</p>
+        </blockquote>
+        <div class="flex items-center gap-3">
+          <img src="https://ui-avatars.com/api/?name=Budi+Santoso&background=fbbf24&color=fff&size=40&bold=true&rounded=true"
+            alt="Foto profil Budi Santoso"
+            width="40" height="40"
+            class="w-10 h-10 rounded-full object-cover"
+            loading="lazy" />
+          <div>
+            <p class="text-sm font-semibold text-slate-900">Budi Santoso</p>
+            <p class="text-xs text-slate-400">Jakarta Pusat</p>
+          </div>
+        </div>
+      </article>
+
+      <!-- Testimoni 3 -->
+      <article class="card-hover bg-white rounded-2xl p-7 shadow-sm border border-slate-100 observe-fade observe-fade-delay-3">
+        <div class="flex items-center gap-1 mb-5" aria-label="Rating 5 bintang">
+          <svg class="w-4 h-4 text-accent" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          <svg class="w-4 h-4 text-accent" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          <svg class="w-4 h-4 text-accent" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          <svg class="w-4 h-4 text-accent" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          <svg class="w-4 h-4 text-slate-200" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+        </div>
+        <blockquote>
+          <p class="text-slate-600 text-sm leading-relaxed mb-6 italic">"Sudah langganan 3 bulan. Konsisten bagus, tepat waktu, dan tidak pernah ada baju yang tertukar. Paling suka layanan cuci setrika, hemat waktu banget!"</p>
+        </blockquote>
+        <div class="flex items-center gap-3">
+          <img src="https://ui-avatars.com/api/?name=Rina+Kusuma&background=8b5cf6&color=fff&size=40&bold=true&rounded=true"
+            alt="Foto profil Rina Kusuma"
+            width="40" height="40"
+            class="w-10 h-10 rounded-full object-cover"
+            loading="lazy" />
+          <div>
+            <p class="text-sm font-semibold text-slate-900">Rina Kusuma</p>
+            <p class="text-xs text-slate-400">Jakarta Barat</p>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ KONTAK ============================================================ -->
+<section id="kontak" class="py-20 bg-white" aria-labelledby="kontak-heading">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-14 observe-fade">
+      <span class="inline-block text-brand text-sm font-semibold uppercase tracking-widest mb-3">Hubungi Kami</span>
+      <h2 id="kontak-heading" class="text-3xl sm:text-4xl font-bold text-slate-900 mb-4">Kontak & Area Layanan</h2>
+      <p class="text-slate-500 max-w-lg mx-auto text-base leading-relaxed">Kami siap melayani kamu di berbagai wilayah Jakarta. Hubungi kami sekarang!</p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+      <!-- Info Kontak -->
+      <div class="observe-fade">
+        <div class="space-y-5">
+          <!-- WhatsApp -->
+          <div class="flex items-start gap-4 p-5 bg-green-50 border border-green-100 rounded-2xl">
+            <div class="w-12 h-12 bg-green-500 rounded-xl flex items-center justify-center flex-shrink-0">
+              <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+                <path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.553 4.116 1.52 5.847L.057 23.895a.75.75 0 00.918.919l6.101-1.457A11.944 11.944 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75a9.706 9.706 0 01-4.95-1.354l-.355-.211-3.682.88.896-3.63-.231-.374A9.71 9.71 0 012.25 12C2.25 6.615 6.615 2.25 12 2.25S21.75 6.615 21.75 12 17.385 21.75 12 21.75z"/>
+              </svg>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-slate-700 mb-1">WhatsApp</p>
+              <a href="https://wa.me/6281234567890" target="_blank" rel="noopener noreferrer"
+                class="text-lg font-bold text-green-600 hover:text-green-700 transition-colors duration-200 cursor-pointer"
+                aria-label="Hubungi via WhatsApp 08123456789">
+                08123456789
+              </a>
+            </div>
+          </div>
+
+          <!-- Jam Operasional -->
+          <div class="flex items-start gap-4 p-5 bg-brand-lighter border border-brand/15 rounded-2xl">
+            <div class="w-12 h-12 bg-brand rounded-xl flex items-center justify-center flex-shrink-0">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12,6 12,12 16,14"/>
+              </svg>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-slate-700 mb-1">Jam Operasional</p>
+              <p class="text-lg font-bold text-slate-900">Setiap Hari</p>
+              <p class="text-brand font-semibold text-base">07.00 - 21.00 WIB</p>
+            </div>
+          </div>
+
+          <!-- Area Layanan -->
+          <div class="flex items-start gap-4 p-5 bg-slate-50 border border-slate-100 rounded-2xl">
+            <div class="w-12 h-12 bg-slate-700 rounded-xl flex items-center justify-center flex-shrink-0">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+              </svg>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-slate-700 mb-2">Area Layanan</p>
+              <div class="flex flex-wrap gap-2">
+                <span class="inline-flex items-center bg-white border border-slate-200 text-slate-700 text-xs font-medium px-3 py-1.5 rounded-lg">Jakarta Selatan</span>
+                <span class="inline-flex items-center bg-white border border-slate-200 text-slate-700 text-xs font-medium px-3 py-1.5 rounded-lg">Jakarta Pusat</span>
+                <span class="inline-flex items-center bg-white border border-slate-200 text-slate-700 text-xs font-medium px-3 py-1.5 rounded-lg">Jakarta Barat</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CTA Card -->
+      <div class="observe-fade observe-fade-delay-2">
+        <div class="hero-gradient rounded-3xl p-10 text-center text-white shadow-xl shadow-brand/20">
+          <div class="w-20 h-20 bg-white/15 rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <svg class="w-10 h-10 text-white" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+              <path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.553 4.116 1.52 5.847L.057 23.895a.75.75 0 00.918.919l6.101-1.457A11.944 11.944 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75a9.706 9.706 0 01-4.95-1.354l-.355-.211-3.682.88.896-3.63-.231-.374A9.71 9.71 0 012.25 12C2.25 6.615 6.615 2.25 12 2.25S21.75 6.615 21.75 12 17.385 21.75 12 21.75z"/>
+            </svg>
+          </div>
+          <h3 class="text-2xl font-bold mb-3">Siap Pesan Sekarang?</h3>
+          <p class="text-blue-100 mb-8 leading-relaxed">Hubungi kami via WhatsApp dan dapatkan layanan laundry terbaik dengan antar jemput gratis!</p>
+          <a href="https://wa.me/6281234567890?text=Halo%20Laundry%20Kilat%2C%20saya%20mau%20pesan%20laundry"
+            target="_blank" rel="noopener noreferrer"
+            class="btn-wa inline-flex items-center justify-center gap-3 bg-green-500 hover:bg-green-400 text-white font-bold text-lg px-10 py-4 rounded-2xl cursor-pointer w-full shadow-lg"
+            aria-label="Chat WhatsApp Laundry Kilat">
+            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+              <path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.553 4.116 1.52 5.847L.057 23.895a.75.75 0 00.918.919l6.101-1.457A11.944 11.944 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75a9.706 9.706 0 01-4.95-1.354l-.355-.211-3.682.88.896-3.63-.231-.374A9.71 9.71 0 012.25 12C2.25 6.615 6.615 2.25 12 2.25S21.75 6.615 21.75 12 17.385 21.75 12 21.75z"/>
+            </svg>
+            Chat WhatsApp
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ FOOTER ============================================================ -->
+<footer class="bg-slate-900 text-slate-400" role="contentinfo">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-14 pb-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
+      <!-- Brand -->
+      <div class="lg:col-span-2">
+        <a href="#home" class="flex items-center gap-2 mb-4 cursor-pointer group" aria-label="Laundry Kilat - Beranda">
+          <div class="w-9 h-9 bg-brand rounded-xl flex items-center justify-center">
+            <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M3 6h18M3 12h18M3 18h7"/>
+              <circle cx="17" cy="18" r="3"/>
+              <path d="M17 15v1.5"/>
+            </svg>
+          </div>
+          <span class="text-xl font-bold text-white">Laundry<span class="text-brand"> Kilat</span></span>
+        </a>
+        <p class="text-sm leading-relaxed text-slate-400 max-w-xs mb-6">Layanan laundry profesional dengan antar jemput gratis, selesai 24 jam. Bersih, cepat, dan terpercaya untuk keluarga kamu.</p>
+        <!-- Social Media -->
+        <div class="flex items-center gap-3" aria-label="Media sosial Laundry Kilat">
+          <a href="#" class="w-9 h-9 bg-slate-800 hover:bg-brand rounded-lg flex items-center justify-center transition-colors duration-200 cursor-pointer" aria-label="Instagram Laundry Kilat">
+            <svg class="w-4 h-4 text-slate-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+              <circle cx="12" cy="12" r="4"/>
+              <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor"/>
+            </svg>
+          </a>
+          <a href="#" class="w-9 h-9 bg-slate-800 hover:bg-brand rounded-lg flex items-center justify-center transition-colors duration-200 cursor-pointer" aria-label="Facebook Laundry Kilat">
+            <svg class="w-4 h-4 text-slate-300" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/>
+            </svg>
+          </a>
+          <a href="https://wa.me/6281234567890" target="_blank" rel="noopener noreferrer" class="w-9 h-9 bg-slate-800 hover:bg-green-500 rounded-lg flex items-center justify-center transition-colors duration-200 cursor-pointer" aria-label="WhatsApp Laundry Kilat">
+            <svg class="w-4 h-4 text-slate-300" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+              <path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.553 4.116 1.52 5.847L.057 23.895a.75.75 0 00.918.919l6.101-1.457A11.944 11.944 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75a9.706 9.706 0 01-4.95-1.354l-.355-.211-3.682.88.896-3.63-.231-.374A9.71 9.71 0 012.25 12C2.25 6.615 6.615 2.25 12 2.25S21.75 6.615 21.75 12 17.385 21.75 12 21.75z"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Navigasi -->
+      <nav aria-label="Footer navigasi">
+        <h4 class="text-white font-semibold text-sm mb-5 uppercase tracking-wider">Navigasi</h4>
+        <ul class="space-y-3" role="list">
+          <li><a href="#home" class="text-sm text-slate-400 hover:text-white transition-colors duration-200 cursor-pointer">Home</a></li>
+          <li><a href="#layanan" class="text-sm text-slate-400 hover:text-white transition-colors duration-200 cursor-pointer">Layanan</a></li>
+          <li><a href="#harga" class="text-sm text-slate-400 hover:text-white transition-colors duration-200 cursor-pointer">Harga</a></li>
+          <li><a href="#cara-order" class="text-sm text-slate-400 hover:text-white transition-colors duration-200 cursor-pointer">Cara Order</a></li>
+          <li><a href="#kontak" class="text-sm text-slate-400 hover:text-white transition-colors duration-200 cursor-pointer">Kontak</a></li>
+        </ul>
+      </nav>
+
+      <!-- Layanan -->
+      <nav aria-label="Footer layanan">
+        <h4 class="text-white font-semibold text-sm mb-5 uppercase tracking-wider">Layanan</h4>
+        <ul class="space-y-3" role="list">
+          <li><span class="text-sm text-slate-400">Cuci Kering</span></li>
+          <li><span class="text-sm text-slate-400">Cuci Setrika</span></li>
+          <li><span class="text-sm text-slate-400">Cuci Sepatu</span></li>
+          <li><span class="text-sm text-slate-400">Laundry Kilogram</span></li>
+          <li>
+            <a href="https://wa.me/6281234567890" target="_blank" rel="noopener noreferrer"
+              class="inline-flex items-center gap-1.5 text-sm text-green-400 hover:text-green-300 transition-colors duration-200 cursor-pointer">
+              <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+                <path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.553 4.116 1.52 5.847L.057 23.895a.75.75 0 00.918.919l6.101-1.457A11.944 11.944 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75a9.706 9.706 0 01-4.95-1.354l-.355-.211-3.682.88.896-3.63-.231-.374A9.71 9.71 0 012.25 12C2.25 6.615 6.615 2.25 12 2.25S21.75 6.615 21.75 12 17.385 21.75 12 21.75z"/>
+              </svg>
+              Pesan via WA
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+    <div class="border-t border-slate-800 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <p class="text-sm text-slate-500">
+        &copy; 2025 <span class="text-slate-300 font-medium">Laundry Kilat</span>. Semua hak dilindungi.
+      </p>
+      <p class="text-sm text-slate-500">Dibuat dengan sepenuh hati untuk pelanggan setia kami</p>
+    </div>
+  </div>
+</footer>
+
+<!-- Floating WhatsApp Button -->
+<a href="https://wa.me/6281234567890?text=Halo%20Laundry%20Kilat%2C%20saya%20mau%20pesan%20laundry"
+  target="_blank" rel="noopener noreferrer"
+  class="btn-wa fixed bottom-6 right-6 z-50 w-14 h-14 bg-green-500 hover:bg-green-600 rounded-full flex items-center justify-center shadow-xl shadow-green-500/30 cursor-pointer"
+  aria-label="Chat WhatsApp Laundry Kilat">
+  <svg class="w-7 h-7 text-white" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+    <path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.553 4.116 1.52 5.847L.057 23.895a.75.75 0 00.918.919l6.101-1.457A11.944 11.944 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75a9.706 9.706 0 01-4.95-1.354l-.355-.211-3.682.88.896-3.63-.231-.374A9.71 9.71 0 012.25 12C2.25 6.615 6.615 2.25 12 2.25S21.75 6.615 21.75 12 17.385 21.75 12 21.75z"/>
+  </svg>
+  <span class="sr-only">Chat WhatsApp</span>
+</a>
+
+<!-- ============================================================ JAVASCRIPT ============================================================ -->
+<script>
+  // ---- Navbar scroll shadow ----
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('shadow-md', window.scrollY > 10);
+  }, { passive: true });
+
+  // ---- Hamburger Menu ----
+  const hamburger = document.getElementById('hamburger-menu');
+  const mobileMenu = document.getElementById('mobile-menu');
+  const iconOpen = document.getElementById('icon-open');
+  const iconClose = document.getElementById('icon-close');
+
+  hamburger.addEventListener('click', () => {
+    const isOpen = !mobileMenu.classList.contains('hidden');
+    mobileMenu.classList.toggle('hidden', isOpen);
+    iconOpen.classList.toggle('hidden', !isOpen);
+    iconClose.classList.toggle('hidden', isOpen);
+    hamburger.setAttribute('aria-expanded', String(!isOpen));
+  });
+
+  document.querySelectorAll('.mobile-nav-link').forEach(link => {
+    link.addEventListener('click', () => {
+      mobileMenu.classList.add('hidden');
+      iconOpen.classList.remove('hidden');
+      iconClose.classList.add('hidden');
+      hamburger.setAttribute('aria-expanded', 'false');
+    });
+  });
+
+  // ---- Scroll Fade Animations ----
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.observe-fade').forEach(el => observer.observe(el));
+
+  // ---- Price Calculator ----
+  const PRICES = {
+    'cuci-kering':  { rate: 5000, unit: 'kg',    label: 'Cuci Kering',    minKg: 2 },
+    'cuci-setrika': { rate: 8000, unit: 'kg',    label: 'Cuci Setrika',   minKg: 2 },
+    'cuci-sepatu':  { rate: 25000, unit: 'pasang', label: 'Cuci Sepatu',  minKg: 0 },
+    'laundry-kg':   { rate: 6000, unit: 'kg',    label: 'Laundry Kilogram', minKg: 2 },
+  };
+
+  const serviceSelect = document.getElementById('service-type');
+  const weightInput = document.getElementById('weight-input');
+  const weightUnit = document.getElementById('weight-unit');
+  const weightLabel = document.getElementById('weight-label');
+  const weightHint = document.getElementById('weight-hint');
+
+  serviceSelect.addEventListener('change', () => {
+    const key = serviceSelect.value;
+    if (!key) return;
+    const svc = PRICES[key];
+    weightUnit.textContent = svc.unit;
+    weightLabel.textContent = svc.unit === 'pasang' ? 'Jumlah Pasang' : 'Berat (kg)';
+    weightInput.placeholder = svc.unit === 'pasang' ? 'Contoh: 2' : 'Contoh: 3';
+    weightHint.textContent = svc.minKg > 0
+      ? `Minimum order ${svc.minKg} kg untuk layanan ini`
+      : 'Masukkan jumlah pasang sepatu';
+    document.getElementById('calc-result').classList.add('hidden');
+    document.getElementById('calc-error').classList.add('hidden');
+  });
+
+  function formatRupiah(number) {
+    return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(number);
+  }
+
+  function calculatePrice() {
+    const key = serviceSelect.value;
+    const qty = parseFloat(weightInput.value);
+    const resultEl = document.getElementById('calc-result');
+    const errorEl = document.getElementById('calc-error');
+    const errorMsg = document.getElementById('error-message');
+
+    resultEl.classList.add('hidden');
+    errorEl.classList.add('hidden');
+
+    if (!key) {
+      errorMsg.textContent = 'Silakan pilih jenis layanan terlebih dahulu.';
+      errorEl.classList.remove('hidden');
+      serviceSelect.focus();
+      return;
+    }
+
+    if (!qty || qty <= 0 || isNaN(qty)) {
+      errorMsg.textContent = 'Masukkan jumlah yang valid (lebih dari 0).';
+      errorEl.classList.remove('hidden');
+      weightInput.focus();
+      return;
+    }
+
+    const svc = PRICES[key];
+
+    if (svc.minKg > 0 && qty < svc.minKg) {
+      errorMsg.textContent = `Minimum order adalah ${svc.minKg} ${svc.unit} untuk layanan ${svc.label}.`;
+      errorEl.classList.remove('hidden');
+      weightInput.focus();
+      return;
+    }
+
+    const total = qty * svc.rate;
+    const unitLabel = svc.unit === 'pasang' ? 'pasang' : 'kg';
+
+    document.getElementById('result-service').textContent =
+      `${svc.label} — ${qty} ${unitLabel} x ${formatRupiah(svc.rate)}/${unitLabel}`;
+    document.getElementById('result-price').textContent = formatRupiah(total);
+
+    resultEl.classList.remove('hidden');
+    resultEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  // Allow Enter key to trigger calculation
+  weightInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') calculatePrice();
+  });
+</script>
+</body>
+</html>
