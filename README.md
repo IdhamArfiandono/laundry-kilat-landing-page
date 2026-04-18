@@ -2,10 +2,6 @@
 
 Landing page profesional untuk jasa laundry antar jemput **Laundry Kilat**, dibangun dengan HTML, Tailwind CSS (CDN), dan JavaScript murni — satu file, tanpa framework, tanpa backend.
 
-## Live Demo
-
-[laundry-kilat.netlify.app](https://laundry-kilat.netlify.app)
-
 ---
 
 ## Tampilan
